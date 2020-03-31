@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'Vue Element Admin',
+  title: 'epub电子书管理平台',
 
   /**
    * @type {boolean} true | false
