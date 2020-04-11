@@ -51,12 +51,11 @@ export default {
     }
   },
   data() {
-    // To fix https://github.com/PanJiaChen/vue-admin-template/issues/237
-    // TODO: refactor with render function
     this.onlyOneChild = null
     return {}
   },
   methods: {
+    // 判断当前路由是否有子路由
     hasOneShowingChild(children = [], parent) {
       const showingChildren = children.filter(item => {
         if (item.hidden) {
@@ -78,9 +77,10 @@ export default {
         this.onlyOneChild = { ... parent, path: '', noShowingChildren: true }
         return true
       }
-
+      // 如果子路由长度大于1则fasle
       return false
     },
+    // 校验路由路径
     resolvePath(routePath) {
       if (isExternal(routePath)) {
         return routePath
@@ -88,6 +88,7 @@ export default {
       if (isExternal(this.basePath)) {
         return this.basePath
       }
+      // 合并并处理路径为绝对路径
       return path.resolve(this.basePath, routePath)
     }
   }
