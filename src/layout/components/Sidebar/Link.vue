@@ -18,6 +18,7 @@ export default {
   },
   methods: {
     linkProps(url) {
+      // 判断url是否为http地址
       if (isExternal(url)) {
         return {
           is: 'a',
