@@ -33,9 +33,10 @@ export default {
   methods: {
     getBreadcrumb() {
       // only show routes with meta.title
+      // this.$route.matched记录了路由匹配的过程
       let matched = this.$route.matched.filter(item => item.meta && item.meta.title)
       const first = matched[0]
-
+      // 数组第一个路由名如果不是dashborad的话就添加上去
       if (!this.isDashboard(first)) {
         matched = [{ path: '/dashboard', meta: { title: 'Dashboard' }}].concat(matched)
       }
@@ -49,12 +50,14 @@ export default {
       }
       return name.trim().toLocaleLowerCase() === 'Dashboard'.toLocaleLowerCase()
     },
+    // 解决动态路由匹配问题
     pathCompile(path) {
       // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
       const { params } = this.$route
       var toPath = pathToRegexp.compile(path)
       return toPath(params)
     },
+    // 如果是最后一个元素或者路由的 redirect 属性指定为 noRedirect 则不会生成链接，否则将使用 a 标签生成链接
     handleLink(item) {
       const { redirect, path } = item
       if (redirect) {
