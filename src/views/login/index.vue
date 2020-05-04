@@ -20,7 +20,7 @@
           autocomplete="on"
         />
       </el-form-item>
-
+      <!-- 大小写提示tooltip -->
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item prop="password">
           <span class="svg-container">
@@ -77,6 +77,7 @@ export default {
         username: 'admin',
         password: '111111'
       },
+      // 登录规则
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
@@ -102,6 +103,7 @@ export default {
     }
   },
   mounted() {
+    // 检查用户名或密码是否为空，如果发现为空，则自动聚焦
     if (this.loginForm.username === '') {
       this.$refs.username.focus()
     } else if (this.loginForm.password === '') {
@@ -109,23 +111,31 @@ export default {
     }
   },
   methods: {
+    // 判断是否开启大写
     checkCapslock(e) {
       const { key } = e
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
     },
+    // 密码的展示和隐藏
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
       } else {
         this.passwordType = 'password'
       }
+      // 切换密码显示状态后，自动聚焦 password 输入框
       this.$nextTick(() => {
         this.$refs.password.focus()
       })
     },
+    // 提交登陆
     handleLogin() {
+      // 调用 el-form 的 validate 方法对 rules 进行验证
       this.$refs.loginForm.validate(valid => {
+        console.log(valid)
         if (valid) {
+          // 如果验证通过，则会调用 vuex 的 user/login action 进行登录验证
+          // 加载动画
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
@@ -143,6 +153,7 @@ export default {
       })
     },
     getOtherQuery(query) {
+      // 通过reduce过滤对象属性，结果是得到不等于redirect的其他地址
       return Object.keys(query).reduce((acc, cur) => {
         if (cur !== 'redirect') {
           acc[cur] = query[cur]
