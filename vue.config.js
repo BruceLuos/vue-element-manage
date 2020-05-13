@@ -36,6 +36,15 @@ module.exports = {
       warnings: false,
       errors: true
     }
+    // proxy: {
+    //   '/api': {
+    //     target: 'http://localhost:18081', // vue访问后台服务的端口
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       '^/api': ''
+    //     }
+    //   }
+    // }
     // before: require('./mock/mock-server.js')
   },
   configureWebpack: {
