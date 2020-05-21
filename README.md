@@ -53,6 +53,16 @@ asyncRoutes 处理完毕后，会和 constantRoutes 合并为一个新的路由�
 
 
 
+后台
+使用express-validator进行参数类型校验
+在 router.post 方法中使用 body 方法判断参数类型，并指定出错时的提示信息
+使用 const err = validationResult(req) 获取错误信息，err.errors 是一个数组，包含所有错误信息，如果 err.errors 为空则表示校验成功，没有参数错误
+如果发现错误我们可以使用 next(boom.badRequest(msg)) 抛出异常，交给我们自定义的异常处理方法进行处理
+
+
+
+
+
 
 
 
