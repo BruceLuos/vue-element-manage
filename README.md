@@ -59,7 +59,11 @@ asyncRoutes 处理完毕后，会和 constantRoutes 合并为一个新的路由�
 使用 const err = validationResult(req) 获取错误信息，err.errors 是一个数组，包含所有错误信息，如果 err.errors 为空则表示校验成功，没有参数错误
 如果发现错误我们可以使用 next(boom.badRequest(msg)) 抛出异常，交给我们自定义的异常处理方法进行处理
 
-
+token用于校验用户是否具备访问接口的权限。
+使用jsonwebtoken生成jwt token，登陆成功后将token附在当前接口的header中
+在node中使用express-jwt进行jwt的认证，白名单除外router/jwt.js,然后在路由index.js中对所有路由进行jwt认证
+在前端的axios请求拦截器中，判断当前store是否已经存在token,存在的话就从token中取出附带在http header中
+然后后端的user/info接口中需要通过token中的username来进行数据库的查询，这样就需要编写一个decoded将token解析出来
 
 
 

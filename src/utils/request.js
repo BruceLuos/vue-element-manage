@@ -11,8 +11,9 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // 如果存在 token 则附带在 http header 中
+    // 前端请求时可以传递token
     if (store.getters.token) {
-      config.headers['X-Token'] = getToken()
+      config.headers['Authorization'] = `Bearer ${getToken()}`
     }
     return config
   },
@@ -25,18 +26,18 @@ service.interceptors.response.use(
   response => {
     const res = response.data
 
-    if (res.code !== 20000) {
+    if (res.code !== 0) {
       Message({
         message: res.message || 'Error',
         type: 'error',
         duration: 5 * 1000
       })
       // 判断 token 失效的场景
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      if (res.code === -2) {
         // 如果 token 失效，则弹出确认对话框，用户点击后，清空 token 并返回登录页面
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
+        MessageBox.confirm('Toeken失效，请重新登陆', '确认退出登陆', {
+          confirmButtonText: '重新登陆',
+          cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           store.dispatch('user/resetToken').then(() => {
@@ -44,14 +45,19 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject(new Error(res.message || 'Error'))
+      return Promise.reject(new Error(res.message || '请求失败'))
     } else {
       return res
     }
   },
   error => {
+    let message = error.message || '请求失败'
+    if (error.response && error.response.data) {
+      const { data } = error.response
+      message = data.msg
+    }
     Message({
-      message: error.message,
+      message,
       type: 'error',
       duration: 5 * 1000
     })
